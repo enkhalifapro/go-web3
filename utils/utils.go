@@ -25,6 +25,7 @@ import (
 	"github.com/enkhalifapro/go-web3/complex/types"
 	"github.com/enkhalifapro/go-web3/dto"
 	"github.com/enkhalifapro/go-web3/providers"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
 // Utils - The Utils Module
@@ -59,4 +60,13 @@ func (utils *Utils) Sha3(data types.ComplexString) (string, error) {
 
 	return pointer.ToString()
 
+}
+
+// DecodeHex converts hex to string
+func DecodeHex(hex string) string {
+	decoded, err := hexutil.Decode(hex)
+	if err != nil {
+		return ""
+	}
+	return string(decoded)
 }

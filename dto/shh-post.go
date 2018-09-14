@@ -56,13 +56,13 @@ type SHHSubscribeParam struct {
 }
 
 type WhisperMsg struct {
-	Sig                string `json:"sig"` // public key who signed this message
-	TTL                int    `json:"ttl"`
-	Timestamp          int    `json:"timestamp"`
-	Topic              string `json:"topic"`
-	Payload            string `json:"payload"` // Decrypted payload
-	Padding            string `json:"padding"` // Optional padding (byte array of arbitrary length).
-	POW                int    `json:"pow"`
-	Hash               string `json:"hash"`
-	RecipientPublicKey string `json:"recipientPublicKey"`
+	Sig                string   `json:"sig"` // public key who signed this message
+	TTL                *big.Int `json:"ttl"`
+	Timestamp          *big.Int `json:"timestamp"`
+	Topic              string   `json:"topic"`
+	Payload            string   `json:"payload"` // Decrypted payload
+	Padding            string   `json:"padding"` // Optional padding (byte array of arbitrary length).
+	POW                float64  `json:"pow"`
+	Hash               string   `json:"hash"`
+	RecipientPublicKey string   `json:"recipientPublicKey"`
 }

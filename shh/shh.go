@@ -148,15 +148,14 @@ func (shh *SHH) GetPublicKey(keyID string) (string, error) {
 }
 
 // GetFilterMsgs Gets all messages based on provided filter
-func (shh *SHH) GetFilterMsgs(filterID string) (*dto.RequestResult, error) {
+func (shh *SHH) GetFilterMsgs(filterID string) []*dto.WhisperMsg {
 
 	pointer := &dto.RequestResult{}
 
 	err := shh.provider.SendRequest(pointer, "shh_getFilterMessages", []string{filterID})
 
 	if err != nil {
-		return nil, err
+		return nil
 	}
-	return pointer, nil
-
+	return pointer.ToWhisperMsgs()
 }

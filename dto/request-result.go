@@ -23,6 +23,7 @@ package dto
 
 import (
 	"errors"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -296,39 +297,36 @@ func (pointer *RequestResult) ToSyncingResponse() (*SyncingResponse, error) {
 
 }
 
-// ToWhisperMsg converts RequestResult into WhisperMsg
-func (pointer *RequestResult) ToWhisperMsg() (*WhisperMsg, error) {
+// ToWhisperMsgs converts RequestResult into WhisperMsg
+func (pointer *RequestResult) ToWhisperMsgs() []*WhisperMsg {
 
 	if err := pointer.checkResponse(); err != nil {
-		return nil, err
+		return nil
 	}
 
-	var result map[string]interface{}
+	typ := reflect.TypeOf((pointer).Result)
 
-	switch (pointer).Result.(type) {
-	case bool:
-		return nil, nil
-	case map[string]interface{}:
-		result = (pointer).Result.(map[string]interface{})
-	default:
-		return nil, customerror.UNPARSEABLEINTERFACE
+	if typ == nil {
+		return nil
 	}
-
-	if len(result) == 0 {
-		return nil, customerror.EMPTYRESPONSE
+	msgs := make([]*WhisperMsg, 0)
+	if res, ok := (pointer).Result.([]interface{}); ok {
+		for _, msg := range res {
+			j, err := json.Marshal(msg)
+			if err != nil {
+				continue
+			}
+			whisperMsg := &WhisperMsg{}
+			err = json.Unmarshal(j, whisperMsg)
+			if err != nil {
+				continue
+			}
+			msgs = append(msgs, whisperMsg)
+		}
+	} else {
+		return nil
 	}
-
-	msgResponse := &WhisperMsg{}
-
-	marshal, err := json.Marshal(result)
-
-	if err != nil {
-		return nil, customerror.UNPARSEABLEINTERFACE
-	}
-
-	json.Unmarshal([]byte(marshal), msgResponse)
-
-	return msgResponse, nil
+	return msgs
 
 }
 
