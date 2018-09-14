@@ -60,7 +60,7 @@ func main() {
 			panic(err)
 		}
 	}
-	//fmt.Println(res)
+
 	// Keep the program from not exiting.
 	runtime.Goexit()
 }
