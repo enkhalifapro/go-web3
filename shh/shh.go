@@ -174,3 +174,16 @@ func (shh *SHH) GetFilterMsgs(filterID string) []*dto.WhisperMsg {
 	}
 	return pointer.ToWhisperMsgs()
 }
+
+// GenerateSymKeyFromPassword Generates the key from password, stores it, and returns its ID.
+func (shh *SHH) GenerateSymKeyFromPassword(pwd string) (string, error) {
+
+	pointer := &dto.RequestResult{}
+
+	err := shh.provider.SendRequest(pointer, "shh_generateSymKeyFromPassword", []string{pwd})
+
+	if err != nil {
+		return "", err
+	}
+	return pointer.ToString()
+}
