@@ -22,8 +22,8 @@
 package net
 
 import (
-	"github.com/regcostajr/go-web3/dto"
-	"github.com/regcostajr/go-web3/providers"
+	"github.com/enkhalifapro/go-web3/dto"
+	"github.com/enkhalifapro/go-web3/providers"
 	"math/big"
 )
 

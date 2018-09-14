@@ -26,8 +26,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/regcostajr/go-web3/complex/types"
-	"github.com/regcostajr/go-web3/constants"
+	"github.com/enkhalifapro/go-web3/complex/types"
+	"github.com/enkhalifapro/go-web3/constants"
 
 	"encoding/json"
 	"fmt"
@@ -293,6 +293,42 @@ func (pointer *RequestResult) ToSyncingResponse() (*SyncingResponse, error) {
 	json.Unmarshal([]byte(marshal), syncingResponse)
 
 	return syncingResponse, nil
+
+}
+
+// ToWhisperMsg converts RequestResult into WhisperMsg
+func (pointer *RequestResult) ToWhisperMsg() (*WhisperMsg, error) {
+
+	if err := pointer.checkResponse(); err != nil {
+		return nil, err
+	}
+
+	var result map[string]interface{}
+
+	switch (pointer).Result.(type) {
+	case bool:
+		return nil, nil
+	case map[string]interface{}:
+		result = (pointer).Result.(map[string]interface{})
+	default:
+		return nil, customerror.UNPARSEABLEINTERFACE
+	}
+
+	if len(result) == 0 {
+		return nil, customerror.EMPTYRESPONSE
+	}
+
+	msgResponse := &WhisperMsg{}
+
+	marshal, err := json.Marshal(result)
+
+	if err != nil {
+		return nil, customerror.UNPARSEABLEINTERFACE
+	}
+
+	json.Unmarshal([]byte(marshal), msgResponse)
+
+	return msgResponse, nil
 
 }
 

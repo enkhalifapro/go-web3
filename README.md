@@ -175,13 +175,13 @@ TODO List
 ### go get
 
 ```bash
-go get -u github.com/regcostajr/go-web3
+go get -u github.com/enkhalifapro/go-web3
 ```
 
 ### glide
 
 ```bash
-glide get github.com/regcostajr/go-web3
+glide get github.com/enkhalifapro/go-web3
 ```
 
 ### Requirements

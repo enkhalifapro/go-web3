@@ -23,11 +23,11 @@ package eth
 
 import (
 	"errors"
-	"github.com/regcostajr/go-web3/complex/types"
-	"github.com/regcostajr/go-web3/dto"
-	"github.com/regcostajr/go-web3/eth/block"
-	"github.com/regcostajr/go-web3/providers"
-	"github.com/regcostajr/go-web3/utils"
+	"github.com/enkhalifapro/go-web3/complex/types"
+	"github.com/enkhalifapro/go-web3/dto"
+	"github.com/enkhalifapro/go-web3/eth/block"
+	"github.com/enkhalifapro/go-web3/providers"
+	"github.com/enkhalifapro/go-web3/utils"
 	"math/big"
 	"strings"
 )

@@ -23,11 +23,11 @@ package test
 
 import (
 	"fmt"
-	"github.com/regcostajr/go-web3"
-	"github.com/regcostajr/go-web3/complex/types"
-	"github.com/regcostajr/go-web3/dto"
-	"github.com/regcostajr/go-web3/eth/block"
-	"github.com/regcostajr/go-web3/providers"
+	"github.com/enkhalifapro/go-web3"
+	"github.com/enkhalifapro/go-web3/complex/types"
+	"github.com/enkhalifapro/go-web3/dto"
+	"github.com/enkhalifapro/go-web3/eth/block"
+	"github.com/enkhalifapro/go-web3/providers"
 	"math/big"
 	"testing"
 	"time"

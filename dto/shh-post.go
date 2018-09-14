@@ -21,11 +21,48 @@
 
 package dto
 
-type SHHPostParameters struct {
+import "math/big"
+
+/* type SHHPostParameters struct {
 	From     string   `json:"from"`
 	To       string   `json:"to"`
 	Topics   []string `json:"topics"`
 	Payload  string   `json:"payload"`
 	Priority string   `json:"priority"`
-	TTL      string   `json:"ttl"`
+	TTL      *big.Int `json:"ttl"`
+} */
+
+type SHHPostParameters struct {
+	SymKeyID   string   `json:"symKeyID"`
+	PubKey     string   `json:"pubKey"`
+	Sig        string   `json:"sig"`
+	TTL        *big.Int `json:"ttl"`
+	Topic      string   `json:"topic"`
+	Payload    string   `json:"payload"`
+	Padding    string   `json:"padding"`
+	POWTime    *big.Int `json:"powTime"`
+	POWTarget  *big.Int `json:"powTarget"`
+	TargetPeer string   `json:"targetPeer"`
+}
+
+// SHHSubscribeParam contains the required parameters of shh_subscribe
+type SHHSubscribeParam struct {
+	SymKeyID     string   `json:"symKeyId"`
+	PrivateKeyID string   `json:"privateKeyId"`
+	Sig          string   `json:"sig"`
+	MinPOW       int      `json:"minPow"`
+	Topics       []string `json:"topics"`
+	AllowP2P     bool     `json:"allowP2P"`
+}
+
+type WhisperMsg struct {
+	Sig                string `json:"sig"` // public key who signed this message
+	TTL                int    `json:"ttl"`
+	Timestamp          int    `json:"timestamp"`
+	Topic              string `json:"topic"`
+	Payload            string `json:"payload"` // Decrypted payload
+	Padding            string `json:"padding"` // Optional padding (byte array of arbitrary length).
+	POW                int    `json:"pow"`
+	Hash               string `json:"hash"`
+	RecipientPublicKey string `json:"recipientPublicKey"`
 }

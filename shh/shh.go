@@ -22,10 +22,12 @@
 package shh
 
 import (
-	"github.com/regcostajr/go-web3/dto"
-	"github.com/regcostajr/go-web3/providers"
-	"github.com/regcostajr/go-web3/utils"
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/common/hexutil"
+
+	"github.com/enkhalifapro/go-web3/dto"
+	"github.com/enkhalifapro/go-web3/providers"
 )
 
 // SHH - The Net Module
@@ -72,15 +74,16 @@ func (shh *SHH) GetVersion() (string, error) {
 //    	- ttl: QUANTITY - integer of the time to live in seconds.
 // Returns:
 // 	  - Boolean - returns true if the message was send, otherwise false.
-func (shh *SHH) Post(from string, to string, topics []string, payload string, priority *big.Int, ttl *big.Int) (bool, error) {
+func (shh *SHH) AsymPost(asymKeyID string, recipientPubKey string, topic string, payload string, ttl *big.Int) (bool, error) {
 
 	params := make([]dto.SHHPostParameters, 1)
-	params[0].From = from
-	params[0].To = to
-	params[0].Topics = topics
-	params[0].Payload = payload
-	params[0].Priority = utils.IntToHex(priority)
-	params[0].TTL = utils.IntToHex(ttl)
+	params[0].TTL = ttl // utils.IntToHex(ttl)
+	params[0].Topic = topic
+	params[0].PubKey = recipientPubKey
+	params[0].POWTarget = big.NewInt(2)
+	params[0].POWTime = big.NewInt(100)
+	params[0].Payload = hexutil.Encode([]byte(payload))
+	params[0].Sig = asymKeyID
 
 	pointer := &dto.RequestResult{}
 
@@ -91,5 +94,69 @@ func (shh *SHH) Post(from string, to string, topics []string, payload string, pr
 	}
 
 	return pointer.ToBoolean()
+
+}
+
+// NewKeyPair - Generates a new public and private key pair for message decryption and encryption.
+// Reference: https://github.com/ethereum/go-ethereum/wiki/Whisper-v5-RPC-API#shh_newkeypair
+// Parameters:
+// - none
+// Returns:
+// 	  - String - returns Key ID on success and an error on failure.
+func (shh *SHH) NewKeyPair() (string, error) {
+
+	pointer := &dto.RequestResult{}
+
+	err := shh.provider.SendRequest(pointer, "shh_newKeyPair", nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	return pointer.ToString()
+
+}
+
+func (shh *SHH) NewMsgFilter(subscribeParams *dto.SHHSubscribeParam) (string, error) {
+	params := make([]dto.SHHSubscribeParam, 0)
+	params = append(params, *subscribeParams)
+
+	pointer := &dto.RequestResult{}
+
+	err := shh.provider.SendRequest(pointer, "shh_newMessageFilter", params)
+
+	if err != nil {
+		return "", err
+	}
+
+	return pointer.ToString()
+
+}
+
+func (shh *SHH) GetPublicKey(keyID string) (string, error) {
+
+	pointer := &dto.RequestResult{}
+
+	err := shh.provider.SendRequest(pointer, "shh_getPublicKey", []string{keyID})
+
+	if err != nil {
+		return "", err
+	}
+
+	return pointer.ToString()
+
+}
+
+// GetFilterMsgs Gets all messages based on provided filter
+func (shh *SHH) GetFilterMsgs(filterID string) (*dto.RequestResult, error) {
+
+	pointer := &dto.RequestResult{}
+
+	err := shh.provider.SendRequest(pointer, "shh_getFilterMessages", []string{filterID})
+
+	if err != nil {
+		return nil, err
+	}
+	return pointer, nil
 
 }
