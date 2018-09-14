@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"reflect"
-
 	"math/big"
 	"runtime"
 
+	"github.com/enkhalifapro/go-web3/utils"
+
 	"github.com/carlescere/scheduler"
-	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/enkhalifapro/go-web3/dto"
 	"github.com/enkhalifapro/go-web3/providers"
@@ -37,29 +36,11 @@ func main() {
 	}
 
 	getMsgs := func() {
-		msgs, err := shh.GetFilterMsgs(filterID)
-		if err != nil {
-			panic(err)
-		}
-
-		if res, ok := msgs.Result.([]interface{}); ok {
-			for _, msg := range res {
-				if msgMap, ok := msg.(map[string]interface{}); ok {
-					payload, err := hexutil.Decode(msgMap["payload"].(string))
-					if err != nil {
-						panic(err)
-					}
-					fmt.Println(string(payload))
-					for k, v := range msgMap {
-						fmt.Printf("key : %s val : %s\n", k, v)
-					}
-				}
-				//r := msgs.Result.(map[string]interface{})["payload"]
+		msgs := shh.GetFilterMsgs(filterID)
+		if len(msgs) > 0 {
+			for _, msg := range msgs {
+				fmt.Println(utils.DecodeHex(msg.Payload))
 			}
-
-		} else {
-			fmt.Println("not")
-			fmt.Println(reflect.TypeOf(msgs.Result))
 		}
 	}
 
@@ -73,9 +54,11 @@ func main() {
 
 	// 4- send a message to subscriber
 	sender, err := shh.NewKeyPair()
-	_, err = shh.AsymPost(sender, pubKey, "0xdeadbeef", "Heloo mesg", big.NewInt(7))
-	if err != nil {
-		panic(err)
+	for index := 0; index < 1000; index++ {
+		_, err = shh.AsymPost(sender, pubKey, "0xdeadbeef", fmt.Sprintf("Hello %v", index), big.NewInt(7))
+		if err != nil {
+			panic(err)
+		}
 	}
 	//fmt.Println(res)
 	// Keep the program from not exiting.
